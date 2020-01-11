@@ -1,4 +1,4 @@
-package leesiongchan.reactnativeescpos;
+package fmauz.reactnativeescpos;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,8 +15,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import leesiongchan.reactnativeescpos.helpers.EscPosHelper;
-import leesiongchan.reactnativeescpos.utils.BitMatrixUtils;
+import fmauz.reactnativeescpos.helpers.EscPosHelper;
+import fmauz.reactnativeescpos.utils.BitMatrixUtils;
 import static io.github.escposjava.print.Commands.*;
 
 public class PrinterService {

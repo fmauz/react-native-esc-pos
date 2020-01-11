@@ -5,20 +5,20 @@ It also has provide an intuitive way to design your layout, check below example 
 
 ## Getting started
 
-`$ yarn add @leesiongchan/react-native-esc-pos`
+`$ yarn add @fmauz/react-native-esc-pos`
 
 ** NOTE: Skip below installation guide if you are using React Native >= 0.60 **
 
 ### Mostly automatic installation
 
-`$ react-native link @leesiongchan/react-native-esc-pos`
+`$ react-native link @fmauz/react-native-esc-pos`
 
 ### Manual installation
 
 #### iOS
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `@leesiongchan` ➜ `react-native-esc-pos` and add `EscPos.xcodeproj`
+2. Go to `node_modules` ➜ `@fmauz` ➜ `react-native-esc-pos` and add `EscPos.xcodeproj`
 3. In XCode, in the project navigator, select your project. Add `libEscPos.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. Run your project (`Cmd+R`)
 
@@ -26,13 +26,13 @@ It also has provide an intuitive way to design your layout, check below example 
 
 1. Open up `android/app/src/main/java/[...]/MainApplication.java`
 
-- Add `import leesiongchan.reactnativeescpos.EscPosPackage;` to the imports at the top of the file
+- Add `import fmauz.reactnativeescpos.EscPosPackage;` to the imports at the top of the file
 - Add `new EscPosPackage()` to the list returned by the `getPackages()` method
 
 2. Append the following lines to `android/settings.gradle`:
    ```
    include ':react-native-esc-pos'
-   project(':react-native-esc-pos').projectDir = new File(rootProject.projectDir, 	'../node_modules/@leesiongchan/react-native-esc-pos/android')
+   project(':react-native-esc-pos').projectDir = new File(rootProject.projectDir, 	'../node_modules/@fmauz/react-native-esc-pos/android')
    ```
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
    ```
@@ -42,7 +42,7 @@ It also has provide an intuitive way to design your layout, check below example 
 ## Usage
 
 ```javascript
-import EscPos from "@leesiongchan/react-native-esc-pos";
+import EscPos from "@fmauz/react-native-esc-pos";
 
 const design = `
 D0004           {<>}           Table #: A1

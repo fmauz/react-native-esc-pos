@@ -1,4 +1,4 @@
-package leesiongchan.reactnativeescpos;
+package fmauz.reactnativeescpos;
 
 import java.util.Arrays;
 import java.util.Collections;

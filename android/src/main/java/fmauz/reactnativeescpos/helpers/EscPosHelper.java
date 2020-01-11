@@ -1,4 +1,4 @@
-package leesiongchan.reactnativeescpos.helpers;
+package fmauz.reactnativeescpos.helpers;
 
 import android.graphics.Bitmap;
 

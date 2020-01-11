@@ -1,4 +1,4 @@
-package leesiongchan.reactnativeescpos;
+package fmauz.reactnativeescpos;
 
 import java.io.BufferedReader;
 import java.io.IOException;

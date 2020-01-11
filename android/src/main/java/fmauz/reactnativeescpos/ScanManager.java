@@ -1,4 +1,4 @@
-package leesiongchan.reactnativeescpos;
+package fmauz.reactnativeescpos;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;

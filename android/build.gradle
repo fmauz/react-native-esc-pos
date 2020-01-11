@@ -63,7 +63,7 @@ def configureReactNativePom(def pom) {
         name packageJson.title
         artifactId packageJson.name
         version = packageJson.version
-        group = "leesiongchan.reactnativeescpos"
+        group = "fmauz.reactnativeescpos"
         description packageJson.description
         url packageJson.repository.baseUrl
 
