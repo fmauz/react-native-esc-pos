@@ -8,7 +8,10 @@
     "baseUrl": "https://github.com/fmauz/react-native-escpos"
   },
   "license": "MIT",
-  "author": {},
+  "author": {
+    "name": "Lee Siong Chan",
+    "email": "ahlee2326@me.com"
+  },
   "keywords": [
     "bluetooth",
     "esc/pos",
