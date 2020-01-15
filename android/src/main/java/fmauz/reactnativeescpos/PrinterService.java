@@ -7,14 +7,22 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.github.escposjava.print.Printer;
 import io.github.escposjava.print.exceptions.BarcodeSizeError;
 import io.github.escposjava.print.exceptions.QRCodeException;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.net.Socket;
+
 import fmauz.reactnativeescpos.helpers.EscPosHelper;
 import fmauz.reactnativeescpos.utils.BitMatrixUtils;
 import static io.github.escposjava.print.Commands.*;
@@ -86,6 +94,93 @@ public class PrinterService {
             "       {QR[Where are the aliens?]}        " + "\n";
 
         printDesign(design);
+    }
+
+    public void printCard(String ip, int port, String cards) throws IOException, Throwable {
+        Socket sock = new Socket(ip, port);
+        OutputStreamWriter dout = new OutputStreamWriter( sock.getOutputStream(), "LATIN1" );
+
+        JSONArray matchCards = new JSONArray(cards);
+        for (int i=0; i < matchCards.length(); i++) {
+            JSONObject matchCard = matchCards.getJSONObject(i);
+            this.printCard(dout, matchCard);
+        }
+        dout.write("\n");
+        dout.flush();
+        dout.close();
+        sock.close();
+    }
+
+    public JSONObject getCardNumber( JSONObject matchCard, int positionX, int positionY ) throws JSONException {
+        JSONArray cardNumbers = matchCard.getJSONArray("CardNumbers");
+        JSONObject cardNumber = null;
+
+        for(int i = 0; i <= cardNumbers.length()-1; i++){
+            JSONObject ref = cardNumbers.getJSONObject(i);
+            if( ref.getInt("positionX") == positionX && ref.getInt("positionY") == positionY ){
+                cardNumber = ref;
+                break;
+            }
+        }
+
+        return cardNumber;
+    }
+
+    public void printCard(OutputStreamWriter dout, JSONObject matchCard) throws IOException, JSONException {
+        char[] c = { 0x1B, 0x12, 0x1B, 0x33, 0x12  };
+        char[] h1 = { 0x1B, 0x46 };
+        char[] dupla = { 0x1B,0x56 };
+        char[] th = { 0xDA, 0xC4, 0xC4, 0xC4, 0xC4, 0xC2, 0xC4, 0xC4, 0xC4, 0xC4, 0xC2, 0xC4, 0xC4, 0xC4, 0xC4, 0xC2, 0xC4, 0xC4, 0xC4, 0xC4, 0xC2, 0xC4, 0xC4, 0xC4, 0xC4, 0xC2, 0xC4, 0xC4, 0xC4, 0xC4, 0xC2, 0xC4, 0xC4, 0xC4, 0xC4, 0xC2, 0xC4, 0xC4, 0xC4, 0xC4, 0xC2, 0xC4, 0xC4, 0xC4, 0xC4, 0xBF };
+        char[] h = { 0x1B, 0x45 };
+        // HEADER DA CARTELA
+        dout.write(c);
+        dout.write(h);
+
+        String roomName = matchCard.getString("roomName");
+        String profileName = matchCard.getString("profileName");
+        String createdAt = matchCard.getString("createdAtFormatted");
+        String matchDate = matchCard.getString("matchDateFormatted");
+        String matchName = matchCard.getString("matchName");
+        String ticketId = matchCard.getString("ticketId");
+        String matchCardId = matchCard.getString("id");
+        Double price = matchCard.getDouble("price");
+
+        dout.write(ticketId + " - " + matchCardId + " - " + createdAt + "\n" );
+        dout.write(h1);
+        dout.write(th);
+        dout.write(c);
+        dout.write("\n");
+        for( int y = 0; y < 3; y++) {
+            dout.write(dupla);
+            for (int x = 0; x < 9; x++) {
+                dout.write(0xB3);
+
+                JSONObject cardNumber = getCardNumber(matchCard, x, y);
+                if ( cardNumber != null ) {
+                    char[] boldSt = {0x1B, 0x45};
+                    dout.write(boldSt);
+                    dout.write(" " + String.format("%02d", cardNumber.getInt("value")) + " ");
+                    char[] boldEn = {0x1B, 0x46};
+                    dout.write(boldEn);
+                } else {
+                    dout.write("    ");
+                }
+            }
+            dout.write(0xB3);
+            dout.write("\n");
+
+            if (y == 2) {
+                char[] tBt = {0xC0, 0xC4, 0xC4, 0xC4, 0xC4, 0xC1, 0xC4, 0xC4, 0xC4, 0xC4, 0xC1, 0xC4, 0xC4, 0xC4, 0xC4, 0xC1, 0xC4, 0xC4, 0xC4, 0xC4, 0xC1, 0xC4, 0xC4, 0xC4, 0xC4, 0xC1, 0xC4, 0xC4, 0xC4, 0xC4, 0xC1, 0xC4, 0xC4, 0xC4, 0xC4, 0xC1, 0xC4, 0xC4, 0xC4, 0xC4, 0xC1, 0xC4, 0xC4, 0xC4, 0xC4, 0xD9};
+                dout.write(tBt);
+            } else {
+                char[] tBt = {0xC3, 0xC4, 0xC4, 0xC4, 0xC4, 0xC5, 0xC4, 0xC4, 0xC4, 0xC4, 0xC5, 0xC4, 0xC4, 0xC4, 0xC4, 0xC5, 0xC4, 0xC4, 0xC4, 0xC4, 0xC5, 0xC4, 0xC4, 0xC4, 0xC4, 0xC5, 0xC4, 0xC4, 0xC4, 0xC4, 0xC5, 0xC4, 0xC4, 0xC4, 0xC4, 0xC5, 0xC4, 0xC4, 0xC4, 0xC4, 0xC5, 0xC4, 0xC4, 0xC4, 0xC4, 0xB4};
+                dout.write(tBt);
+            }
+            dout.write("\n");
+        }
+        dout.write(h);
+        dout.write(roomName + " - " + matchName + " - " + matchDate + " - " + profileName + " - " + price + "\n\n " );
+
     }
 
     public void printDesign(String text) throws IOException {
