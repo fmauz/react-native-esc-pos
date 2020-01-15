@@ -103,7 +103,7 @@ public class PrinterService {
         JSONArray matchCards = new JSONArray(cards);
         for (int i=0; i < matchCards.length(); i++) {
             JSONObject matchCard = matchCards.getJSONObject(i);
-            this.printCard(dout, matchCard);
+            printCard(dout, matchCard);
         }
         dout.write("\n");
         dout.flush();
