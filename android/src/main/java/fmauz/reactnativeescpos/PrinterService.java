@@ -96,6 +96,39 @@ public class PrinterService {
         printDesign(design);
     }
 
+    public static void printReport(String ip, int port, String value) throws IOException, Throwable {
+        Socket sock = new Socket(ip, port);
+        OutputStreamWriter dout = new OutputStreamWriter( sock.getOutputStream(), "LATIN1" );
+
+        JSONObject report = new JSONObject(value);
+        char[] h1 = { 0x1B, 0x46 };
+        dout.write(h1);
+        dout.write("                   Tomballapp" + "\n");
+        dout.write("------------------------------------------" + "\n");
+        dout.write("Terminal: " + report.getString("profileName") + "\n");
+        dout.write("Sala: " + report.getString("roomName") + "\n");
+        dout.write("Inicio: " + report.getString("startDate") + "\n");
+        dout.write("Termino: " + report.getString("endDate") + "\n");
+        dout.write("------------------------------------------" + "\n\n");
+        dout.write( "Qtd. Vendas diretas: " + report.getString("totalDirectTickets") + "\n");
+        dout.write( "Vendas diretas:      " + report.getString("amountDirectTickets") + "\n");
+        dout.write( "Premio:              " + report.getString("amountAwardTickets") + "\n");
+        dout.write( "Comissao:            " + report.getString("commissionTickets") + "\n");
+        dout.write( "Subtotal:            " + report.getString("subtotalDirect") + "\n\n");
+        dout.write( "Qtd. Recargas:       " + report.getString("totalCharge") + "\n");
+        dout.write( "Vendas recargas:     " + report.getString("amountCharge") + "\n");
+        dout.write( "Comissao:            " + report.getString("commissionCharge") + "\n");
+        dout.write( "Subtotal:            " + report.getString("subtotalCharge") + "\n\n");
+        dout.write( "Total:               " + report.getString("total") + "\n\n" );
+        dout.write("------------------------------------------" + "\n");
+        dout.write("               tomballapp.com" + "\n");
+        dout.write("            " + report.getString("printerDate") + "\n");
+        dout.write("\n\n\n");
+        dout.flush();
+        dout.close();
+        sock.close();
+    }
+
     public static void printCard(String ip, int port, String cards) throws IOException, Throwable {
         Socket sock = new Socket(ip, port);
         OutputStreamWriter dout = new OutputStreamWriter( sock.getOutputStream(), "LATIN1" );
@@ -145,7 +178,7 @@ public class PrinterService {
         String matchCardId = matchCard.getString("id");
         Double price = matchCard.getDouble("price");
 
-        dout.write(ticketId + " - " + matchCardId + " - " + createdAt + "\n" );
+        dout.write(ticketId + " - " + matchCardId + " - " + matchName + " - " + createdAt + "\n" );
         dout.write(h1);
         dout.write(th);
         dout.write(c);
@@ -179,7 +212,7 @@ public class PrinterService {
             dout.write("\n");
         }
         dout.write(h);
-        dout.write(roomName + " - " + matchName + " - " + matchDate + " - " + profileName + " - " + price + "\n\n " );
+        dout.write(matchDate + " - " + profileName + " - " + price + " tomballapp.com\n\n " );
 
     }
 

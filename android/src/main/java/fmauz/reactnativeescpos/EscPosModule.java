@@ -169,6 +169,18 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void printReport(String ip, int port, String value, Promise promise) {
+        try {
+            printerService.printReport(ip, port, value);
+            promise.resolve(true);
+        } catch (IOException e) {
+            promise.reject(e);
+        } catch (Throwable e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
     public void write(byte[] command, Promise promise) {
         printerService.write(command);
         promise.resolve(true);
