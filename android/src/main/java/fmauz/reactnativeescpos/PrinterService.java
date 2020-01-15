@@ -96,7 +96,7 @@ public class PrinterService {
         printDesign(design);
     }
 
-    public void printCard(String ip, int port, String cards) throws IOException, Throwable {
+    public static void printCard(String ip, int port, String cards) throws IOException, Throwable {
         Socket sock = new Socket(ip, port);
         OutputStreamWriter dout = new OutputStreamWriter( sock.getOutputStream(), "LATIN1" );
 
@@ -111,7 +111,7 @@ public class PrinterService {
         sock.close();
     }
 
-    public JSONObject getCardNumber( JSONObject matchCard, int positionX, int positionY ) throws JSONException {
+    public static JSONObject getCardNumber( JSONObject matchCard, int positionX, int positionY ) throws JSONException {
         JSONArray cardNumbers = matchCard.getJSONArray("CardNumbers");
         JSONObject cardNumber = null;
 
@@ -126,7 +126,7 @@ public class PrinterService {
         return cardNumber;
     }
 
-    public void printCard(OutputStreamWriter dout, JSONObject matchCard) throws IOException, JSONException {
+    public static void printCard(OutputStreamWriter dout, JSONObject matchCard) throws IOException, JSONException {
         char[] c = { 0x1B, 0x12, 0x1B, 0x33, 0x12  };
         char[] h1 = { 0x1B, 0x46 };
         char[] dupla = { 0x1B,0x56 };
