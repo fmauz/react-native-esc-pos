@@ -129,6 +129,71 @@ public class PrinterService {
         sock.close();
     }
 
+    public static void printRecharge(String ip, int port, String value) throws IOException, Throwable {
+        Socket sock = new Socket(ip, port);
+        OutputStreamWriter dout = new OutputStreamWriter( sock.getOutputStream(), "LATIN1" );
+
+        JSONObject report = new JSONObject(value);
+        char[] h = { 0x1B, 0x45 };
+        char[] dupla = { 0x1B,0x56 };
+        char[] h1 = { 0x1B, 0x46 };
+        char[] fontA = { 0x1b, 0x4d, 0x00 };
+        char[] fontB = { 0x1b, 0x4d, 0x01 };
+        char[] doubleWidth = { 0x1b, 0x21, 0x20 };
+        char[] doubleHeight = { 0x1b, 0x21, 0x10 };
+        char[] normal = { 0x1b, 0x21, 0x00};
+        char[] alignCenter = { 0x1b, 0x61, 0x01 };
+        char[] alignLeft = { 0x1b, 0x61, 0x00 };
+        char[] alignRight = { 0x1b, 0x61, 0x02 };
+        
+        dout.write(alignCenter);
+        dout.write("Tomball" + "\n");
+        dout.write(alignLeft);
+        dout.write("--------------------------------------------------" + "\n");
+        dout.write("Sala:     " + report.getString("roomName") + "\n");
+        dout.write("Terminal: " + report.getString("profileName") + "\n");
+        dout.write("Valor:    " + report.getString("price") + "\n");
+        dout.write("Data:     " + report.getString("createdAtFormatted") + "\n");
+        dout.write("--------------------------------------------------" + "\n");
+        dout.write("Para usar a recarga acesse tomballapp.com, clique" + "\n");
+        dout.write("no menu Recargas e entre o codigo abaixo." + "\n");
+        dout.write("--------------------------------------------------" + "\n\n");
+        dout.write(alignCenter);
+        dout.write(doubleWidth);
+        dout.write(report.getString("code"));
+        dout.write(normal);
+        dout.write("\n\n--------------------------------------------------" + "\n");
+        dout.write("tomballapp.com" + "\n");
+        dout.write(report.getString("printerDate") + "\n");
+        dout.write(alignLeft);
+        dout.write("\n\n\n");
+        dout.flush();
+        dout.close();
+        sock.close();
+    }
+
+    public void printRecharge(String value) throws IOException, Throwable {
+        JSONObject report = new JSONObject(value);
+        String design = "";
+        design += "{C}Tomball" + "\n";
+        design += "--------------------------------" + "\n";
+        design += "Sala:     " + report.getString("roomName") + "\n";
+        design += "Terminal: " + report.getString("profileName") + "\n";
+        design += "Valor:    " + report.getString("price") + "\n";
+        design += "Data:     " + report.getString("createdAtFormatted") + "\n";
+        design += "--------------------------------" + "\n";
+        design += "Para usar a recarga acesse" + "\n";
+        design += "tomballapp.com, clique no menu" + "\n";
+        design += "Recargas e entre o codigo abaixo." + "\n";
+        design += "--------------------------------" + "\n";
+        design += "{C}{H1}" + report.getString("code") ;
+        design += "{LS:M}\n--------------------------------" + "\n";
+        design += "{C}tomballapp.com" + "\n";
+        design += "{C}" + report.getString("printerDate") + "\n";
+        design += "{LS:M}\n\n\n";
+        printDesign(design);
+    }
+
     public void printReport(String value) throws IOException, Throwable {
         JSONObject report = new JSONObject(value);
 

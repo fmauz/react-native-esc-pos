@@ -1,7 +1,7 @@
 {
   "name": "@fmauz/react-native-esc-pos",
   "description": "A React Native ESC/POS module to help you connect to your ESC/POS printer easily.",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fmauz/react-native-escpos.git",
