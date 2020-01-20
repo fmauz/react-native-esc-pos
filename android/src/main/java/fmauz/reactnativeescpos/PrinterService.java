@@ -103,12 +103,12 @@ public class PrinterService {
         JSONObject report = new JSONObject(value);
         char[] h1 = { 0x1B, 0x46 };
         dout.write(h1);
-        dout.write("                   Tomballapp" + "\n");
+        dout.write("                 Tomball" + "\n");
         dout.write("------------------------------------------" + "\n");
         dout.write("Terminal: " + report.getString("profileName") + "\n");
-        dout.write("Sala: " + report.getString("roomName") + "\n");
-        dout.write("Inicio: " + report.getString("startDate") + "\n");
-        dout.write("Termino: " + report.getString("endDate") + "\n");
+        dout.write("Sala:     " + report.getString("roomName") + "\n");
+        dout.write("Inicio:   " + report.getString("startDate") + "\n");
+        dout.write("Termino:  " + report.getString("endDate") + "\n");
         dout.write("------------------------------------------" + "\n\n");
         dout.write( "Qtd. Vendas diretas: " + report.getString("totalDirectTickets") + "\n");
         dout.write( "Vendas diretas:      " + report.getString("amountDirectTickets") + "\n");
@@ -129,6 +129,32 @@ public class PrinterService {
         sock.close();
     }
 
+    public void printReport(String value) throws IOException, Throwable {
+        JSONObject report = new JSONObject(value);
+
+        print("            Tomball" + "\n");
+        print("--------------------------------" + "\n");
+        print("Terminal: " + report.getString("profileName") + "\n");
+        print("Sala:     " + report.getString("roomName") + "\n");
+        print("Inicio:   " + report.getString("startDate") + "\n");
+        print("Termino:  " + report.getString("endDate") + "\n");
+        print("--------------------------------" + "\n\n");
+        print( "Qt. Vendas diretas: " + report.getString("totalDirectTickets") + "\n");
+        print( "Vendas diretas:     " + report.getString("amountDirectTickets") + "\n");
+        print( "Premio:             " + report.getString("amountAwardTickets") + "\n");
+        print( "Comissao:           " + report.getString("commissionTickets") + "\n");
+        print( "Subtotal:           " + report.getString("subtotalDirect") + "\n\n");
+        print( "Qtd. Recargas:      " + report.getString("totalCharge") + "\n");
+        print( "Vendas recargas:    " + report.getString("amountCharge") + "\n");
+        print( "Comissao:           " + report.getString("commissionCharge") + "\n");
+        print( "Subtotal:           " + report.getString("subtotalCharge") + "\n\n");
+        print( "Total:              " + report.getString("total") + "\n\n" );
+        print("--------------------------------" + "\n");
+        print("        tomballapp.com" + "\n");
+        print("     " + report.getString("printerDate") + "\n");
+        print("\n\n\n");
+    }
+
     public static void printCard(String ip, int port, String cards) throws IOException, Throwable {
         Socket sock = new Socket(ip, port);
         OutputStreamWriter dout = new OutputStreamWriter( sock.getOutputStream(), "LATIN1" );
@@ -144,6 +170,17 @@ public class PrinterService {
         sock.close();
     }
 
+    public void printCard(String cards) throws IOException, Throwable {
+        JSONArray matchCards = new JSONArray(cards);
+        String cardsDesign = "";
+        for (int i=0; i < matchCards.length(); i++) {
+            JSONObject matchCard = matchCards.getJSONObject(i);
+            cardsDesign += printCardDesign(matchCard) + "\n\n\n\n\n";
+        }
+
+        printDesign(cardsDesign);
+    }
+
     public static JSONObject getCardNumber( JSONObject matchCard, int positionX, int positionY ) throws JSONException {
         JSONArray cardNumbers = matchCard.getJSONArray("CardNumbers");
         JSONObject cardNumber = null;
@@ -157,6 +194,39 @@ public class PrinterService {
         }
 
         return cardNumber;
+    }
+
+    public static String printCardDesign(JSONObject matchCard) throws JSONException {
+        String roomName = matchCard.getString("roomName");
+        String profileName = matchCard.getString("profileName");
+        String createdAt = matchCard.getString("createdAtFormatted");
+        String matchDate = matchCard.getString("matchDateFormatted");
+        String matchName = matchCard.getString("matchName");
+        String ticketId = matchCard.getString("ticketId");
+        String matchCardId = matchCard.getString("id");
+        Double price = matchCard.getDouble("price");
+
+        JSONArray cardNumbers = matchCard.getJSONArray("CardNumbers");
+        String line = ticketId + " - " + matchCardId + " - " + matchDate + "\n";
+        line += "{H1} ──┬──┬──┬──┬──{LS:M}\n";
+        for( int y = 0; y < 3; y++) {
+            line += "{H1}│";
+            for(int i = 0; i <= cardNumbers.length()-1; i++){
+                JSONObject ref = cardNumbers.getJSONObject(i);
+                if( ref.getInt("positionY") == y ){
+                    line += String.format("%02d", ref.getInt("value")) + "│";
+                }
+            }
+            if(y < 2){
+                line += "{H1}├──┼──┼──┼──┼──┤{LS:M}\n";
+            }else{
+                line += "{H1}└──┴──┴──┴──┴──┘{LS:M}\n";
+            }
+        }
+        line += createdAt + " - " + profileName + " - " + price + "\ntomballapp.com\n";
+
+        return line;
+
     }
 
     public static void printCard(OutputStreamWriter dout, JSONObject matchCard) throws IOException, JSONException {
@@ -178,7 +248,7 @@ public class PrinterService {
         String matchCardId = matchCard.getString("id");
         Double price = matchCard.getDouble("price");
 
-        dout.write(ticketId + " - " + matchCardId + " - " + matchName + " - " + createdAt + "\n" );
+        dout.write(ticketId + " - " + matchCardId + " - " + matchDate + "\n" );
         dout.write(h1);
         dout.write(th);
         dout.write(c);
@@ -212,7 +282,7 @@ public class PrinterService {
             dout.write("\n");
         }
         dout.write(h);
-        dout.write(matchDate + " - " + profileName + " - " + price + " tomballapp.com\n\n " );
+        dout.write(createdAt + " - " + profileName + " - " + price + " tomballapp.com\n\n " );
 
     }
 
