@@ -251,13 +251,13 @@ public class PrinterService {
         String cardsDesign = "";
         cardsDesign += ("            Tomball" + "\n");
         cardsDesign += ("--------------------------------" + "\n");
-        cardsDesign += ("Codigo:  " + matchCardId + "\n");
-        cardsDesign += ("Terminal: " + profileName + "\n");
-        cardsDesign += ("Sala:     " + roomName + "\n");
+        cardsDesign += ("Codigo:    " + matchCardId + "\n");
+        cardsDesign += ("Terminal:  " + profileName + "\n");
+        cardsDesign += ("Sala:      " + roomName + "\n");
         cardsDesign += ("Partida:   " + matchName + "\n");
         cardsDesign += ("Horario:   " + matchDate + "\n");
-        cardsDesign += ("Valor:   " + price + "\n");
-        cardsDesign += ("Data:   " + createdAt + "\n");
+        cardsDesign += ("Valor:     " + price + "\n");
+        cardsDesign += ("Data:      " + createdAt + "\n");
         cardsDesign += ("--------------------------------" + "\n");
 
         for (int i=0; i < matchCards.length(); i++) {
@@ -265,7 +265,10 @@ public class PrinterService {
             cardsDesign += printCardDesign(matchCard) + "\n\n\n";
         }
 
-        printDesign(cardsDesign + "\n\n\n\n");
+        printDesign(cardsDesign);
+        print("--------------------------------" + "\n");
+        print("tomballapp.com");
+        print("\n\n\n");
     }
 
     public static JSONObject getCardNumber( JSONObject matchCard, int positionX, int positionY ) throws JSONException {
@@ -294,7 +297,7 @@ public class PrinterService {
         Double price = matchCard.getDouble("price");
 
         JSONArray cardNumbers = matchCard.getJSONArray("CardNumbers");
-        String line = ticketId + " - " + matchCardId + " - " + matchDate + "\n";
+        String line = matchCardId + "\n";
         line += "{H1} ──┬──┬──┬──┬──{LS:M}\n";
         for( int y = 0; y < 3; y++) {
             line += "{H1}│";
