@@ -237,13 +237,35 @@ public class PrinterService {
 
     public void printCard(String cards) throws IOException, Throwable {
         JSONArray matchCards = new JSONArray(cards);
+        JSONObject matchCardFirst = matchCards.getJSONObject(0);
+
+        String roomName = matchCardFirst.getString("roomName");
+        String profileName = matchCardFirst.getString("profileName");
+        String createdAt = matchCardFirst.getString("createdAtFormatted");
+        String matchDate = matchCardFirst.getString("matchDateFormatted");
+        String matchName = matchCardFirst.getString("matchName");
+        String ticketId = matchCardFirst.getString("ticketId");
+        String matchCardId = matchCardFirst.getString("id");
+        Double price = matchCardFirst.getDouble("price");
+
         String cardsDesign = "";
+        cardsDesign += ("            Tomball" + "\n");
+        cardsDesign += ("--------------------------------" + "\n");
+        cardsDesign += ("Codigo:  " + matchCardId + "\n");
+        cardsDesign += ("Terminal: " + profileName + "\n");
+        cardsDesign += ("Sala:     " + roomName + "\n");
+        cardsDesign += ("Partida:   " + matchName + "\n");
+        cardsDesign += ("Horario:   " + matchDate + "\n");
+        cardsDesign += ("Valor:   " + price + "\n");
+        cardsDesign += ("Data:   " + createdAt + "\n");
+        cardsDesign += ("--------------------------------" + "\n");
+
         for (int i=0; i < matchCards.length(); i++) {
             JSONObject matchCard = matchCards.getJSONObject(i);
-            cardsDesign += printCardDesign(matchCard) + "\n\n\n\n\n";
+            cardsDesign += printCardDesign(matchCard) + "\n\n\n";
         }
 
-        printDesign(cardsDesign);
+        printDesign(cardsDesign + "\n\n\n\n");
     }
 
     public static JSONObject getCardNumber( JSONObject matchCard, int positionX, int positionY ) throws JSONException {
@@ -288,7 +310,6 @@ public class PrinterService {
                 line += "{H1}└──┴──┴──┴──┴──┘{LS:M}\n";
             }
         }
-        line += createdAt + " - " + profileName + " - " + price + "\ntomballapp.com\n";
 
         return line;
 
