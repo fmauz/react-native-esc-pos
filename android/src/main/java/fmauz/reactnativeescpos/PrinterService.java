@@ -251,7 +251,7 @@ public class PrinterService {
         String cardsDesign = "";
         cardsDesign += ("            Tomball" + "\n");
         cardsDesign += ("--------------------------------" + "\n");
-        cardsDesign += ("Codigo:    " + matchCardId + "\n");
+        cardsDesign += ("Codigo:    " + ticketId + "\n");
         cardsDesign += ("Terminal:  " + profileName + "\n");
         cardsDesign += ("Sala:      " + roomName + "\n");
         cardsDesign += ("Partida:   " + matchName + "\n");
@@ -259,15 +259,15 @@ public class PrinterService {
         cardsDesign += ("Valor:     " + price + "\n");
         cardsDesign += ("Data:      " + createdAt + "\n");
         cardsDesign += ("--------------------------------" + "\n");
+        printDesign(cardsDesign);
 
         for (int i=0; i < matchCards.length(); i++) {
             JSONObject matchCard = matchCards.getJSONObject(i);
-            cardsDesign += printCardDesign(matchCard) + "\n\n\n";
+            String cardDes = printCardDesign(matchCard) + "\n\n\n";
+            printDesign(cardDes);
         }
-
-        printDesign(cardsDesign);
         print("--------------------------------" + "\n");
-        print("tomballapp.com\n");
+        print("tomballapp.com\n \n \n \n");
         print("\n\n\n\n");
     }
 
