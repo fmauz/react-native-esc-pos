@@ -267,8 +267,8 @@ public class PrinterService {
 
         printDesign(cardsDesign);
         print("--------------------------------" + "\n");
-        print("tomballapp.com");
-        print("\n\n\n");
+        print("tomballapp.com\n");
+        print("\n\n\n\n");
     }
 
     public static JSONObject getCardNumber( JSONObject matchCard, int positionX, int positionY ) throws JSONException {
